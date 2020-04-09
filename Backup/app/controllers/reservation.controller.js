@@ -1,5 +1,4 @@
 const db = require("../models");
-const nodemailer = require('nodemailer'); 
 const Reservation = db.reservations;
 const Op = db.Sequelize.Op;
 const reservDuration = 2;
@@ -25,37 +24,7 @@ exports.create = (req, res) => {
     // Save Reservation in database
     Reservation.create(reservation)
         .then(data => {
-
-            var transporter = nodemailer.createTransport({
-                host: "localhost",
-                port: 465,
-                secure: true,
-                auth: {
-                  user: 'hwr@berlin-fn.de',
-                  pass: 'zzightio44'
-                },
-		tls: {
-			rejectUnauthorized: false
-		}
-              });
-              
-              var mailOptions = {
-                from: 'hwr@berlin-fn.de',
-                to: reservation.mail,
-                subject: 'Restaurant HWR Reservierung',
-                text: 'Sie haben eine neue Reservierung um ' + reservation.starttime + " im HWR Restaurant. <br>Um die Reservierung zu bearbeiten oder zu löschen klicken Sie auf folgenden Link:<br><a href='http://berlin-fn.de:4200'>http://berlin-fn.de:4200</a>",
-                html: 'Sie haben eine neue Reservierung um ' + reservation.starttime + " im HWR Restaurant. <br>Um die Reservierung zu bearbeiten oder zu löschen klicken Sie auf folgenden Link:<br><a href='http://berlin-fn.de:4200'>http://berlin-fn.de:4200</a>"
-              };
-              
-              transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                  console.log(error);
-                  res.status(500).send({message: "Fehler beim Mailversand"});
-                } else {
-                  console.log('Email sent: ' + info.response);
-                  res.send(data);
-                }
-              }); 
+            res.send(data);
         })
         .catch(err => {
             res.status(500).send({
